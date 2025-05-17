@@ -1,6 +1,7 @@
 // Learn more https://docs.expo.io/guides/customizing-metro
 const { getDefaultConfig } = require("expo/metro-config");
 const { withNativeWind } = require("nativewind/metro");
+const path = require("path");
 
 /** @type {import('expo/metro-config').MetroConfig} */
 const config = getDefaultConfig(__dirname, {
@@ -20,10 +21,15 @@ config.transformer = {
   assetPlugins: ["expo-asset/tools/hashAssetFiles"],
 };
 
-// Reset resolver settings
+// Basic resolver settings
 config.resolver.disableHierarchicalLookup = false;
 config.resolver.blockList = [];
-config.resolver.extraNodeModules = {};
+config.resolver.extraNodeModules = {
+  ...config.resolver.extraNodeModules,
+};
+
+// Add symlinks resolution
+config.resolver.symlinks = true;
 
 // Export the config with NativeWind
 module.exports = withNativeWind(config, { input: "./global.css" });
